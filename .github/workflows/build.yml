@@ -1,0 +1,41 @@
+name: Build Single Executable
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          
+      - name: Install and Build Angular Client
+        working-directory: client
+        run: |
+          npm install
+          ng build --prod
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      
+      - name: Build Go Server
+        run: |
+          go build -o rdio-scanner .
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: suffolk-scanner
+          path: suffolk-scanner
