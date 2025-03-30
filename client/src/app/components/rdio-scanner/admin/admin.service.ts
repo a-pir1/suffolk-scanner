@@ -310,35 +310,16 @@ export class RdioScannerAdminService implements OnDestroy {
         }
     }
 
-    async login(password: string): Promise<boolean> {
-        try {
-            const res = await firstValueFrom(this.ngHttpClient.post<{
-                passwordNeedChange: boolean,
-                token: string
-            }>(
-                this.getUrl(url.login),
-                { password },
-                { headers: this.getHeaders(), responseType: 'json' },
-            ));
-
-            this.token = res.token;
-
-            this._passwordNeedChange = res.passwordNeedChange;
-
-            this.event.emit({
-                authenticated: this.authenticated,
-                passwordNeedChange: res.passwordNeedChange,
-            });
-
-            this.configWebSocketOpen();
-
-            return !!this.token;
-
-        } catch (error) {
-            this.errorHandler(error);
-
-            return false;
-        }
+    async login(_password: string): Promise<boolean> {
+        // Bypass built-in authentication since Cloudflare is handling access.
+        this.token = 'cloudflared-access';  // Dummy token value
+        this._passwordNeedChange = false;
+        this.event.emit({
+            authenticated: true,
+            passwordNeedChange: false,
+        });
+        this.configWebSocketOpen();
+        return true;
     }
 
     async logout(): Promise<boolean> {
