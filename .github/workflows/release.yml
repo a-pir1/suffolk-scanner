@@ -11,16 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Set up Node.js and build the Angular client
+      # Set up Node.js and build the Angular client using npx
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+          
       - name: Install and Build Angular Client
         working-directory: client
         run: |
           npm install
-          ng build --prod
+          npx ng build --prod
 
       # Set up Go and build the executable
       - name: Setup Go
