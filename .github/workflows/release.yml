@@ -8,9 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # Update this to match the outputPath defined in your client/angular.json file.
-      ANGULAR_OUTPUT_DIR: "client/dist/suffolk-scanner"
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -26,24 +24,11 @@ jobs:
           npm install
           npx ng build --prod
 
-      - name: List Angular Build Output
+      - name: List Angular Build Output in server/webapp
         run: |
-          echo "Listing client/dist contents:"
-          ls -la client/dist || echo "client/dist not found"
-          echo "Listing contents of $ANGULAR_OUTPUT_DIR:"
-          ls -la "$ANGULAR_OUTPUT_DIR" || echo "$ANGULAR_OUTPUT_DIR not found"
+          echo "Listing contents of server/webapp:"
+          ls -la server/webapp || echo "server/webapp not found"
 
-      - name: Copy Angular Build to server/webapp
-        run: |
-          if [ -d "${ANGULAR_OUTPUT_DIR}" ]; then
-            echo "Using ${ANGULAR_OUTPUT_DIR} as Angular build output."
-            mkdir -p server/webapp
-            cp -r "${ANGULAR_OUTPUT_DIR}"/* server/webapp/
-          else
-            echo "Error: Angular build output directory ${ANGULAR_OUTPUT_DIR} not found." >&2
-            exit 1
-          fi
-      
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
