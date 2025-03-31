@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rdio-scanner": {
+    "suffolk-scanner": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "rdio-scanner:build:production"
+              "browserTarget": "suffolk-scanner:build:production"
             },
             "development": {
-              "browserTarget": "rdio-scanner:build:development",
+              "browserTarget": "suffolk-scanner:build:development",
               "proxyConfig": "src/proxy.conf.js"
             }
           },
@@ -87,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rdio-scanner:build"
+            "browserTarget": "suffolk-scanner:build"
           }
         },
         "test": {
@@ -112,5 +112,5 @@
       }
     }
   },
-  "defaultProject": "rdio-scanner"
+  "defaultProject": "suffolk-scanner"
 }
