@@ -1,12 +1,9 @@
-name: Build Single Executable
+name: Build and Release Executable
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,28 +11,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Set up Node.js and build the Angular client
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          
       - name: Install and Build Angular Client
         working-directory: client
         run: |
           npm install
           ng build --prod
 
+      # Set up Go and build the executable
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.18'
-      
-      - name: Build Go Server
+      - name: Build Go Executable
         run: |
           go build -o rdio-scanner .
-      
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
+
+      # Attach the built executable to the GitHub Release
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
         with:
-          name: suffolk-scanner
-          path: suffolk-scanner
+          files: rdio-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
