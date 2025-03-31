@@ -1,5 +1,7 @@
+
 <div class="rdio-status">
     <div class="branding">{{ branding }}</div>
+    <img src="http://status.suffolkscanner.com/api/badge/16/status?style=plastic" alt="Suffolk Scanner Status">
     <div class="led" [ngClass]="ledStyle"></div>
 </div>
 <div class="rdio-display" [ngClass]="{ idle: !dimmer }" (dblclick)="toggleFullscreen.emit()">
