@@ -25,18 +25,34 @@ jobs:
           npm install
           npx ng build --prod
 
-      # List the build output directory to verify the folder name
+      # Debug: List potential Angular build output directories
       - name: List Angular Build Output
         run: |
-          echo "Listing client/dist directory:"
-          ls -la client/dist
+          echo "Listing client/dist contents:"
+          ls -la client/dist || echo "client/dist not found"
+          echo "Listing client/dist/rdio-scanner contents:"
+          ls -la client/dist/rdio-scanner || echo "client/dist/rdio-scanner not found"
+          echo "Listing client/dist/suffolk-scanner contents:"
+          ls -la client/dist/suffolk-scanner || echo "client/dist/suffolk-scanner not found"
 
       # Copy the Angular build output to server/webapp.
-      # Adjust the folder name below if your Angular output folder is named differently.
+      # Adjusts for different possible output folder names.
       - name: Copy Angular Build to server/webapp
         run: |
           mkdir -p server/webapp
-          cp -r client/dist/suffolk-scanner/* server/webapp/ || { echo "Failed to copy Angular build output. Verify the output folder name in client/dist/"; exit 1; }
+          if [ -d "client/dist/suffolk-scanner" ]; then
+            echo "Using client/dist/suffolk-scanner as Angular build output."
+            cp -r client/dist/suffolk-scanner/* server/webapp/
+          elif [ -d "client/dist/rdio-scanner" ]; then
+            echo "Using client/dist/rdio-scanner as Angular build output."
+            cp -r client/dist/rdio-scanner/* server/webapp/
+          elif [ -d "client/dist" ]; then
+            echo "Using client/dist as Angular build output."
+            cp -r client/dist/* server/webapp/
+          else
+            echo "Error: Angular build output directory not found." >&2
+            exit 1
+          fi
 
       # Setup Go and build the executable
       - name: Setup Go
