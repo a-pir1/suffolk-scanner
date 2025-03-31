@@ -8,31 +8,42 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
 
-      # Build the Angular Client
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Build Angular Client
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - name: Build Angular Client
+      
+      - name: Install and Build Angular Client
         working-directory: client
         run: |
           npm install
           npx ng build --prod
 
-      # Build the Go Executable
+      # Copy Angular build output to server/webapp
+      - name: Copy Angular Build to server/webapp
+        run: |
+          mkdir -p server/webapp
+          cp -r client/dist/rdio-scanner/* server/webapp/
+
+      # Build Go Executable
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.18'
+      
       - name: Build Go Executable
+        working-directory: server
         run: |
           go mod tidy
-          go build -o rdio-scanner .
+          go build -o ../rdio-scanner .
 
-      # Upload the built executable as a release asset
+      # Upload the built executable to the release
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
