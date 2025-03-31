@@ -11,28 +11,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Set up Node.js and build the Angular client using npx
+      # Build the Angular Client
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          
-      - name: Install and Build Angular Client
+      - name: Build Angular Client
         working-directory: client
         run: |
           npm install
           npx ng build --prod
 
-      # Set up Go and build the executable
+      # Build the Go Executable
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.18'
       - name: Build Go Executable
         run: |
+          go mod tidy
           go build -o rdio-scanner .
 
-      # Attach the built executable to the GitHub Release
+      # Upload the built executable as a release asset
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
