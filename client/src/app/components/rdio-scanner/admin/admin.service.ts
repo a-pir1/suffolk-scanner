@@ -311,13 +311,12 @@ export class RdioScannerAdminService implements OnDestroy {
     }
 
     async login(_password: string): Promise<boolean> {
-        // Bypass built-in authentication since Cloudflare is handling access.
-        this.token = 'cloudflared-access';  // Dummy token value
+        // Bypass the login check entirely.
+        this.token = 'bypass-token';  // Dummy token so that the getter returns true.
         this._passwordNeedChange = false;
-        this.event.emit({
-            authenticated: true,
-            passwordNeedChange: false,
-        });
+        // Immediately emit that the user is authenticated.
+        this.event.emit({ authenticated: true, passwordNeedChange: false });
+        // Optionally, if your WebSocket connection should be opened, call that.
         this.configWebSocketOpen();
         return true;
     }
