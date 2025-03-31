@@ -8,12 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      # Update this to match the outputPath defined in your client/angular.json file.
+      ANGULAR_OUTPUT_DIR: "client/dist/suffolk-scanner"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Setup Node.js and build the Angular client
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -25,36 +26,24 @@ jobs:
           npm install
           npx ng build --prod
 
-      # Debug: List potential Angular build output directories
       - name: List Angular Build Output
         run: |
           echo "Listing client/dist contents:"
           ls -la client/dist || echo "client/dist not found"
-          echo "Listing client/dist/rdio-scanner contents:"
-          ls -la client/dist/rdio-scanner || echo "client/dist/rdio-scanner not found"
-          echo "Listing client/dist/suffolk-scanner contents:"
-          ls -la client/dist/suffolk-scanner || echo "client/dist/suffolk-scanner not found"
+          echo "Listing contents of $ANGULAR_OUTPUT_DIR:"
+          ls -la "$ANGULAR_OUTPUT_DIR" || echo "$ANGULAR_OUTPUT_DIR not found"
 
-      # Copy the Angular build output to server/webapp.
-      # Adjusts for different possible output folder names.
       - name: Copy Angular Build to server/webapp
         run: |
-          mkdir -p server/webapp
-          if [ -d "client/dist/suffolk-scanner" ]; then
-            echo "Using client/dist/suffolk-scanner as Angular build output."
-            cp -r client/dist/suffolk-scanner/* server/webapp/
-          elif [ -d "client/dist/rdio-scanner" ]; then
-            echo "Using client/dist/rdio-scanner as Angular build output."
-            cp -r client/dist/rdio-scanner/* server/webapp/
-          elif [ -d "client/dist" ]; then
-            echo "Using client/dist as Angular build output."
-            cp -r client/dist/* server/webapp/
+          if [ -d "${ANGULAR_OUTPUT_DIR}" ]; then
+            echo "Using ${ANGULAR_OUTPUT_DIR} as Angular build output."
+            mkdir -p server/webapp
+            cp -r "${ANGULAR_OUTPUT_DIR}"/* server/webapp/
           else
-            echo "Error: Angular build output directory not found." >&2
+            echo "Error: Angular build output directory ${ANGULAR_OUTPUT_DIR} not found." >&2
             exit 1
           fi
-
-      # Setup Go and build the executable
+      
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
@@ -66,7 +55,6 @@ jobs:
           go mod tidy
           go build -o ../suffolk-scanner .
 
-      # Upload the built executable as a release asset
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
