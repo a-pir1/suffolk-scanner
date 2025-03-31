@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Build Angular Client
+      # Setup Node.js and build the Angular client
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -25,13 +25,20 @@ jobs:
           npm install
           npx ng build --prod
 
-      # Copy Angular build output to server/webapp
+      # List the build output directory to verify the folder name
+      - name: List Angular Build Output
+        run: |
+          echo "Listing client/dist directory:"
+          ls -la client/dist
+
+      # Copy the Angular build output to server/webapp.
+      # Adjust the folder name below if your Angular output folder is named differently.
       - name: Copy Angular Build to server/webapp
         run: |
           mkdir -p server/webapp
-          cp -r client/dist/suffolk-scanner/* server/webapp/
+          cp -r client/dist/suffolk-scanner/* server/webapp/ || { echo "Failed to copy Angular build output. Verify the output folder name in client/dist/"; exit 1; }
 
-      # Build Go Executable
+      # Setup Go and build the executable
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
@@ -43,7 +50,7 @@ jobs:
           go mod tidy
           go build -o ../suffolk-scanner .
 
-      # Upload the built executable to the release
+      # Upload the built executable as a release asset
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
