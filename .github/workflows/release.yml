@@ -29,7 +29,7 @@ jobs:
       - name: Copy Angular Build to server/webapp
         run: |
           mkdir -p server/webapp
-          cp -r client/dist/rdio-scanner/* server/webapp/
+          cp -r client/dist/suffolk-scanner/* server/webapp/
 
       # Build Go Executable
       - name: Setup Go
@@ -41,12 +41,12 @@ jobs:
         working-directory: server
         run: |
           go mod tidy
-          go build -o ../rdio-scanner .
+          go build -o ../suffolk-scanner .
 
       # Upload the built executable to the release
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: rdio-scanner
+          files: suffolk-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
