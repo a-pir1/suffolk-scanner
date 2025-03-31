@@ -40,9 +40,17 @@ jobs:
           go mod tidy
           go build -o ../suffolk-scanner .
 
-      - name: Upload Release Asset
+      - name: Upload Release Asset (if triggered by a release)
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
           files: suffolk-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifact (if not a release event)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v2
+        with:
+          name: suffolk-scanner
+          path: suffolk-scanner
