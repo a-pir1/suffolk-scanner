@@ -1,3 +1,8 @@
+# **WARNING**
+
+This fork of Chuot's RDIO Scanner is designed very specifically to be used with Suffolk Scanner and is not secure when used outside of this deployment.  Please feel free to take features or codes from it for your fork, but DO NOT deploy this to your branch.  If you have any quesions, please reach out to us at [help@suffolkscanner.com](mailto:help@suffolkscanner.com)
+
+
 ![Rdio Scanner](./docs/images/rdio-scanner.png?raw=true)
 
 # What is it ?
