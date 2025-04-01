@@ -19,6 +19,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { AdminEvent, RdioScannerAdminService, Config } from '../admin.service';
 
@@ -30,6 +31,7 @@ import { AdminEvent, RdioScannerAdminService, Config } from '../admin.service';
     templateUrl: './config.component.html',
 })
 export class RdioScannerAdminConfigComponent implements OnDestroy, OnInit {
+    private matSnackBar = inject(MatSnackBar);
     docker = false;
 
     form: FormGroup | undefined;
@@ -158,6 +160,11 @@ export class RdioScannerAdminConfigComponent implements OnDestroy, OnInit {
     async save(): Promise<void> {
         this.form?.markAsPristine();
 
-        await this.adminService.saveConfig(this.form?.getRawValue());
+         try {
+             await this.adminService.saveConfig(this.form?.getRawValue())
+             this.matSnackBar.open('Admin settings saved', '', { duration: 1000 });
+         } catch (error: unknown) {
+             this.matSnackBar.open('Admin settings failed to save: ' + error, '', { duration: 1000 });
+         }
     }
 }
