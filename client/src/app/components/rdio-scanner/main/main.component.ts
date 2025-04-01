@@ -74,7 +74,7 @@ export class RdioScannerMainComponent implements OnDestroy, OnInit {
     //
     // Be respectful, sponsor the project if you can, use native apps when possible.
     //
-    callTalkgroupName = `Rdio Scanner v${packageInfo.version}`;
+    callTalkgroupName = `Suffolk Scanner v${packageInfo.version}`;
     //
     // END OF RED TAPE.
     //
