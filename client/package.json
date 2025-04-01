@@ -32,7 +32,7 @@
         "node": ">=16.0"
     },
     "license": "LICENSE",
-    "name": "rdio-scanner",
+    "name": "suffolk-scanner",
     "private": true,
     "scripts": {
         "build": "ng build --base-href ./ --configuration production",
