@@ -1,7 +1,16 @@
 
 <div class="rdio-status">
     <div class="branding">{{ branding }}</div>
-    <img src="http://status.suffolkscanner.com/api/badge/16/status?style=plastic" alt="Suffolk Scanner Status">
+    <a href="https://status.suffolkscanner.com" target="_blank">
+        <img id="status-badge" src="http://status.suffolkscanner.com/api/badge/16/status?style=plastic" alt="Suffolk Scanner Status">
+    </a>
+    <script>
+          setInterval(function() {
+              const img = document.getElementById("status-badge");
+              const timestamp = new Date().getTime(); // Create unique refresh timestamp to prevent status caching
+              img.src = "http://status.suffolkscanner.com/api/badge/16/status?style=plastic&" + timestamp; // Adds a timestamp so a new image is loaded each time, but Uptime Kuma ignores this timestamp
+          }, 60000); // Refresh status every 60 seconds
+    </script>
     <div class="led" [ngClass]="ledStyle"></div>
 </div>
 <div class="rdio-display" [ngClass]="{ idle: !dimmer }" (dblclick)="toggleFullscreen.emit()">
