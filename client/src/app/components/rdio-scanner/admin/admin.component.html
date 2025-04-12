@@ -31,13 +31,5 @@
             </mat-expansion-panel-header>
             <rdio-scanner-admin-tools #toolsComponent (config)="configComponent.reset($event, { dirty: true }); configPanel.open()"></rdio-scanner-admin-tools>
         </mat-expansion-panel>
-        <mat-expansion-panel hideToggle (click)="logout()">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <mat-icon>logout</mat-icon>
-                    Logout
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-        </mat-expansion-panel>
     </mat-accordion>
 </ng-container>
