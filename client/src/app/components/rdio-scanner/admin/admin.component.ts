@@ -24,7 +24,7 @@ import { AdminEvent, RdioScannerAdminService, Group, Tag } from './admin.service
     encapsulation: ViewEncapsulation.None,
     selector: 'rdio-scanner-admin',
     styleUrls: ['./admin.component.scss'],
-    templateUrl: './admin.component.html',
+    templateUrl: './admin.component.php',
 })
 export class RdioScannerAdminComponent implements OnDestroy {
     authenticated = this.adminService.authenticated;
