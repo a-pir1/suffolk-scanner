@@ -23,7 +23,7 @@ import packageInfo from '../../../../../package.json';
 @Component({
     selector: 'rdio-scanner-admin-page',
     styleUrls: ['./admin.component.scss'],
-    templateUrl: './admin.component.php',
+    templateUrl: './admin.component.html',
 })
 export class RdioScannerAdminPageComponent {
     version = packageInfo.version;
